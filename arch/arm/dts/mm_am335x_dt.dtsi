@@ -1,0 +1,10 @@
+&i2c0 {
+	gpioexp: gpio@19 {
+		compatible = "nxp,pca9672";
+		reg = <0x19>;
+	};
+};
+
+&mmc1 {
+	bus-width = <1>;
+};
