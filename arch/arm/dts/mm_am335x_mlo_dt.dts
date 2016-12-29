@@ -1,2 +1,2 @@
-#include "am335x-phytec-phyflex-som.dts"
+#include "am335x-phytec-phyflex-som-mlo.dts"
 #include "mm_am335x_dt.dtsi"
