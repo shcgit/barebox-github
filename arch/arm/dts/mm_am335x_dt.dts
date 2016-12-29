@@ -1,0 +1,5 @@
+#include "am335x-phytec-phyflex-som.dts"
+
+&mmc1 {
+	bus-width = <1>;
+};
