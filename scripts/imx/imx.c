@@ -131,6 +131,14 @@ static int do_cmd_check(struct config_data *data, int argc, char *argv[])
 	return data->check(data, cmd, addr, mask);
 }
 
+static int do_cmd_nop(struct config_data *data, int argc, char *argv[])
+{
+	if (!data->nop)
+		return -ENOSYS;
+
+	return data->nop(data);
+}
+
 static int write_mem(struct config_data *data, int argc, char *argv[],
 		     int set_bits, int clear_bits)
 {
@@ -223,6 +231,7 @@ static struct soc_type socs[] = {
 	{ .name = "imx51", .header_version = 1, .cpu_type = IMX_CPU_IMX51 },
 	{ .name = "imx53", .header_version = 2, .cpu_type = IMX_CPU_IMX53 },
 	{ .name = "imx6", .header_version = 2, .cpu_type = IMX_CPU_IMX6 },
+	{ .name = "vf610", .header_version = 2, .cpu_type = IMX_CPU_VF610 },
 };
 
 static int do_soc(struct config_data *data, int argc, char *argv[])
@@ -364,6 +373,9 @@ struct command cmds[] = {
 	}, {
 		.name = "check",
 		.parse = do_cmd_check,
+	}, {
+		.name = "nop",
+		.parse = do_cmd_nop,
 	}, {
 		.name = "loadaddr",
 		.parse = do_loadaddr,

@@ -80,6 +80,10 @@ config BAREBOX_UPDATE_IMX_EXTERNAL_NAND
 	depends on MTD_WRITE
 	default y
 
+config RESET_IMX_SRC
+	def_bool y
+	depends on ARCH_IMX6 || ARCH_IMX50 || ARCH_IMX51 || ARCH_IMX53
+
 comment "Freescale i.MX System-on-Chip"
 
 config ARCH_IMX1
@@ -147,6 +151,20 @@ config ARCH_IMX6SX
 	bool
 	select ARCH_IMX6
 	select OFTREE
+	select COMMON_CLK_OF_PROVIDER
+
+config ARCH_IMX6UL
+	bool
+	select ARCH_IMX6
+
+config ARCH_VF610
+	bool
+	select ARCH_HAS_L2X0
+	select ARCH_HAS_FEC_IMX
+	select CPU_V7
+	select PINCTRL
+	select OFTREE
+	select COMMON_CLK
 	select COMMON_CLK_OF_PROVIDER
 
 config IMX_MULTI_BOARDS
@@ -244,6 +262,7 @@ config MACH_FREESCALE_MX53_VMX53
 config MACH_PHYTEC_SOM_IMX6
         bool "Phytec phyCARD-i.MX6 and phyFLEX-i.MX6"
         select ARCH_IMX6
+	select ARCH_IMX6UL
 
 config MACH_DFI_FS700_M60
 	bool "DFI i.MX6 FS700 M60 Q7 Board"
@@ -326,6 +345,10 @@ config MACH_GW_VENTANA
 config MACH_CM_FX6
 	bool "CM FX6"
 	select ARCH_IMX6
+
+config MACH_VF610_TWR
+	bool "Freescale VF610 Tower Board"
+	select ARCH_VF610
 
 endif
 
@@ -645,7 +668,7 @@ config IMX_IIM_FUSE_BLOW
 
 config IMX_OCOTP
 	tristate "i.MX6 On Chip OTP controller"
-	depends on ARCH_IMX6
+	depends on ARCH_IMX6 || ARCH_VF610
 	depends on OFDEVICE
 	help
 	  This adds support for the i.MX6 On-Chip OTP controller. Currently the

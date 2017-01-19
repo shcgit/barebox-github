@@ -1631,7 +1631,7 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
 EXPORT_SYMBOL(of_get_next_available_child);
 
 /**
- *	of_get_next_child - Iterate a node childs
+ *	of_get_next_child - Iterate a node children
  *	@node:  parent node
  *	@prev:  previous child of the parent node, or NULL to get first
  *
@@ -2019,9 +2019,9 @@ int of_add_initrd(struct device_node *root, resource_size_t start,
 	struct device_node *chosen;
 	__be32 buf[2];
 
-	chosen = of_find_node_by_path_from(root, "/chosen");
+	chosen = of_create_node(root, "/chosen");
 	if (!chosen)
-		return -EINVAL;
+		return -ENOMEM;
 
 	if (end) {
 		of_write_number(buf, start, 2);

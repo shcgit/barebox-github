@@ -93,7 +93,7 @@ static noinline int baltos_sram_init(void)
 	while (__raw_readl(AM33XX_WDT_REG(WWPS)) != 0x0);
 
 	/* Setup the PLLs and the clocks for the peripherals */
-	am33xx_pll_init(MPUPLL_M_500, DDRPLL_M_400);
+	am33xx_pll_init(MPUPLL_M_600, DDRPLL_M_400);
 	am335x_sdram_init(0x18B, &ddr3_cmd_ctrl, &ddr3_regs, &ddr3_data);
 	sdram_size = get_ram_size((void *)0x80000000, (1024 << 20));
 	if (sdram_size == SZ_256M)
@@ -125,6 +125,12 @@ ENTRY_FUNCTION(start_am33xx_baltos_sram, bootinfo, r1, r2)
 ENTRY_FUNCTION(start_am33xx_baltos_sdram, r0, r1, r2)
 {
 	void *fdt;
+
+	/*
+	 * Prolong global reset duration to the max. value (0xff)
+	 * and leave power domain reset to its default value (0x10).
+	 */
+	__raw_writel(0x000010ff, AM33XX_PRM_RSTTIME);
 
 	fdt = __dtb_am335x_baltos_minimal_start;
 

@@ -3588,10 +3588,13 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 		return -EINVAL;
 	}
 
-	ret = e1000_register_eeprom(hw);
-	if (ret < 0) {
-		dev_err(&pdev->dev, "failed to register EEPROM devices!\n");
-		return ret;
+	if (IS_ENABLED(CONFIG_MTD)) {
+		ret = e1000_register_eeprom(hw);
+		if (ret < 0) {
+			dev_err(&pdev->dev,
+			        "failed to register EEPROM devices!\n");
+			return ret;
+		}
 	}
 
 	if (e1000_validate_eeprom_checksum(hw))
@@ -3600,6 +3603,7 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	e1000_get_ethaddr(edev, edev->ethaddr);
 
 	/* Set up the function pointers and register the device */
+	edev->parent = &pdev->dev;
 	edev->init = e1000_init;
 	edev->recv = e1000_poll;
 	edev->send = e1000_transmit;
