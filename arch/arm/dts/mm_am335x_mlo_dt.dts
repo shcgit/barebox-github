@@ -1,2 +1,51 @@
 #include "am335x-phytec-phyflex-som-mlo.dts"
-#include "mm_am335x_dt.dtsi"
+
+&flash {
+	/delete-node/ partition@c0000;
+	/delete-node/ partition@e0000;
+};
+
+&mmc1 {
+	bus-width = <1>;
+};
+
+&nand {
+	/delete-node/ partition@0;
+	/delete-node/ partition@20000;
+	/delete-node/ partition@40000;
+	/delete-node/ partition@60000;
+	/delete-node/ partition@80000;
+	/delete-node/ partition@100000;
+	/delete-node/ partition@180000;
+	/delete-node/ partition@1C0000;
+};
+
+&spi0 {
+	ti,spi-num-cs = <1>;
+};
+
+&am33xx_pinmux {
+	mmc1_pins: pinmux_mmc1_pins {
+		pinctrl-single,pins = <
+			0x0fc (PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_dat0 */
+			0x100 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_clk */
+			0x104 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_cmd */
+		>;
+	};
+
+	spi0_pins: pinmux_spi0_pins {
+		pinctrl-single,pins = <
+			0x150 (PIN_INPUT_PULLUP | MUX_MODE0)	/* spi0_clk */
+			0x154 (PIN_INPUT_PULLUP | MUX_MODE0)	/* spi0_d0 */
+			0x158 (PIN_INPUT_PULLUP | MUX_MODE0)	/* spi0_d1 */
+			0x15c (PIN_OUTPUT_PULLUP | MUX_MODE0)	/* spi0_cs0 */
+		>;
+	};
+
+	uart0_pins: pinmux_uart0_pins {
+		pinctrl-single,pins = <
+			0x170 (PIN_INPUT_PULLUP | MUX_MODE0)	/* uart0_rxd */
+			0x174 (PIN_OUTPUT_PULLUP | MUX_MODE0)	/* uart0_txd */
+		>;
+	};
+};
