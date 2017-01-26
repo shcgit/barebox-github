@@ -1,5 +1,13 @@
 #include "am335x-phytec-phyflex-som.dts"
 
+/ {
+	chosen {
+		/delete-node/ environment-nand;
+	};
+};
+
+/delete-node/ &vcc3v3;
+
 &dcan1 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&dcan1_pins>;
@@ -12,11 +20,26 @@
 };
 
 &i2c0 {
+	/* WM8753 SCLK Low pulse-width MIN 1.3us */
+	clock-frequency = <350000>;
+
 	gpioexp: gpio@19 {
 		compatible = "nxp,pca9672";
 		reg = <0x19>;
 		gpio-controller;
 		#gpio-cells = <2>;
+	};
+
+	wm8753: wm8753@1b {
+		#sound-dai-cells = <0>;
+		compatible = "wlf,wm8753";
+		reg = <0x1b>;
+	};
+
+	rtc@68 {
+		compatible = "maxim,ds3231";
+		reg = <0x68>;
+		#clock-cells = <1>;
 	};
 };
 
@@ -26,14 +49,16 @@
 	status = "okay";
 /* TODO: */
 /* blue-and-red-wiring = "crossed"; */
-/* port {}; */
+	port {
+		/* TODO: */
+	};
 };
 
 &mcasp0 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&mcasp0_pins>;
-	status = "okay";
 	op-mode = <0>;
+	status = "okay";
 /* TODO: */
 };
 
@@ -53,9 +78,9 @@
 };
 
 &spi0 {
-	ti,spi-num-cs = <1>;
+	ti,spi-num-cs = <2>;
 /* TODO: */
-/* cs-gpios = <-1>; */
+	cs-gpios = <0>, <0>;
 };
 
 &uart1 {
@@ -65,6 +90,8 @@
 };
 
 &usb {
+	pinctrl-names = "default";
+	pinctrl-0 = <&usb0_pins>;
 	status = "okay";
 };
 
@@ -77,8 +104,7 @@
 };
 
 &usb0 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&usb0_pins>;
+	dr_mode = "host";
 	status = "okay";
 };
 
@@ -150,6 +176,7 @@
 			0x154 (PIN_INPUT_PULLUP | MUX_MODE0)	/* spi0_d0 */
 			0x158 (PIN_INPUT_PULLUP | MUX_MODE0)	/* spi0_d1 */
 			0x15c (PIN_OUTPUT_PULLUP | MUX_MODE0)	/* spi0_cs0 */
+			0x160 (PIN_OUTPUT_PULLUP | MUX_MODE0)	/* spi0_cs1 */
 		>;
 	};
 
@@ -169,9 +196,11 @@
 
 	usb0_pins: pinmux_usb0_pins {
 		pinctrl-single,pins = <
-/* FIXME */
-			0x080 (PIN_INPUT_PULLUP | MUX_MODE7)	/* gpio1[30] */
-			0x21c (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* USB0_DRVVBUS */
+			0x208 (PIN_INPUT | MUX_MODE0)		/* usb0_dm */
+			0x20c (PIN_INPUT | MUX_MODE0)		/* usb0_dp */
+			0x214 (PIN_INPUT | MUX_MODE0)		/* usb0_id */
+			0x218 (PIN_INPUT | MUX_MODE0)		/* usb0_vbus */
+			0x21c (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* usb0_drvvbus */
 		>;
 	};
 };

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+mtdparts="768k(rsvd),-(system)"
+kernelname="gpmc_nand"
+
+mtdparts-add -b -d nand0 -k ${kernelname} -p ${mtdparts}
+
+ubiattach /dev/nand0.system

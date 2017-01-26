@@ -1,8 +1,5 @@
 #!/bin/sh
 
-[ ! -e /dev/nand0.root.ubi ] && ubiattach /dev/nand0.root
-
-global.bootm.image="/dev/nand0.root.ubi.kernel"
-global.bootm.oftree="/dev/nand0.root.ubi.oftree"
-
-global.linux.bootargs.dyn.root="root=ubi0:root ubi.mtd=root rw rootfstype=ubifs"
+global.bootm.image="/dev/nand0.system.ubi.kernel"
+global.bootm.initrd="/dev/nand0.system.ubi.root"
+global.linux.bootargs.dyn.root="root=/dev/ram0 ro"

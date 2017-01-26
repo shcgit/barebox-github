@@ -1,5 +1,13 @@
 #include "am335x-phytec-phyflex-som-mlo.dts"
 
+/ {
+	chosen {
+		/delete-node/ environment-nand;
+	};
+};
+
+/delete-node/ &vcc3v3;
+
 &flash {
 	/delete-node/ partition@c0000;
 	/delete-node/ partition@e0000;
