@@ -28,10 +28,6 @@
 	/delete-node/ partition@1C0000;
 };
 
-&spi0 {
-	ti,spi-num-cs = <1>;
-};
-
 &am33xx_pinmux {
 	mmc1_pins: pinmux_mmc1_pins {
 		pinctrl-single,pins = <
@@ -47,6 +43,7 @@
 			0x154 (PIN_INPUT_PULLUP | MUX_MODE0)	/* spi0_d0 */
 			0x158 (PIN_INPUT_PULLUP | MUX_MODE0)	/* spi0_d1 */
 			0x15c (PIN_OUTPUT_PULLUP | MUX_MODE0)	/* spi0_cs0 */
+			0x160 (PIN_OUTPUT_PULLUP | MUX_MODE0)	/* spi0_cs1 */
 		>;
 	};
 

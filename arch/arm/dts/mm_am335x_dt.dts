@@ -4,6 +4,14 @@
 	chosen {
 		/delete-node/ environment-nand;
 	};
+
+	clocks {
+		clk20m: clk20m {
+			compatible = "fixed-clock";
+			clock-frequency = <20000000>;
+			#clock-cells = <0>;
+		};
+	};
 };
 
 /delete-node/ &vcc3v3;
@@ -78,9 +86,23 @@
 };
 
 &spi0 {
-	ti,spi-num-cs = <2>;
 /* TODO: */
+	ti,spi-num-cs = <2>;
 	cs-gpios = <0>, <0>;
+
+	max14830: max14830@1 {
+		compatible = "maxim,max14830";
+		reg = <1>;
+		spi-max-frequency = <16000000>;
+		clocks = <&clk20m>;
+		clock-names = "osc";
+/*
+		interrupt-parent = <&gpio3>;
+		interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
+*/
+		gpio-controller;
+		#gpio-cells = <2>;
+	};
 };
 
 &uart1 {
