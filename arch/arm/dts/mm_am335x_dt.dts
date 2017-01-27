@@ -85,6 +85,10 @@
 	/delete-node/ partition@1C0000;
 };
 
+&rtc {
+	status = "disabled";
+};
+
 &spi0 {
 /* TODO: */
 	ti,spi-num-cs = <2>;

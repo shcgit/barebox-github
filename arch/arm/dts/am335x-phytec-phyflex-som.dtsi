@@ -1,3 +1,5 @@
+#include <dt-bindings/interrupt-controller/irq.h>
+
 / {
 	chosen {
 		linux,stdout-path = &uart0;
@@ -114,11 +116,11 @@
 			0x018 (PIN_INPUT_PULLUP | MUX_MODE0)	/* gpmc_ad6 */
 			0x01c (PIN_INPUT_PULLUP | MUX_MODE0)	/* gpmc_ad7 */
 			0x070 (PIN_INPUT_PULLUP | MUX_MODE0)	/* gpmc_wait0 */
-			0x07c (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* gpmc_csn0 */
-			0x090 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* gpmc_advn_ale */
-			0x094 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* gpmc_oen_ren */
-			0x098 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* gpmc_wen */
-			0x09c (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* gpmc_be0n_cle */
+			0x07c (PIN_OUTPUT | MUX_MODE0)		/* gpmc_csn0 */
+			0x090 (PIN_OUTPUT | MUX_MODE0)		/* gpmc_advn_ale */
+			0x094 (PIN_OUTPUT | MUX_MODE0)		/* gpmc_oen_ren */
+			0x098 (PIN_OUTPUT | MUX_MODE0)		/* gpmc_wen */
+			0x09c (PIN_OUTPUT | MUX_MODE0)		/* gpmc_be0n_cle */
 		>;
 	};
 };
@@ -131,6 +133,7 @@
 
 	tps: pmic@2d {
 		reg = <0x2d>;
+status = "disabled";
 	};
 
 	at24c32: eeprom@52 {
@@ -242,9 +245,14 @@
 	status = "okay";
 	pinctrl-names = "default";
 	pinctrl-0 = <&nandflash_pins_s0>;
-	ranges = <0 0 0x08000000 0x1000000>;	/* CS0: 16MB for NAND */
+	ranges = <0 0 0x08000000 0x1000000>;		/* CS0: 16MB for NAND */
 	nand: nand@0,0 {
-		reg = <0 0 4>; /* CS0, offset 0, IO size 4  */
+		compatible = "ti,omap2-nand";
+		reg = <0 0 4>;				/* CS0, offset 0, IO size 4 */
+		interrupt-parent = <&gpmc>;
+		interrupts = <0 IRQ_TYPE_NONE>,		/* fifoevent */
+			     <1 IRQ_TYPE_NONE>;		/* termcount */
+		rb-gpios = <&gpmc 0 GPIO_ACTIVE_HIGH>;	/* gpmc_wait0 */
 		nand-bus-width = <8>;
 		ti,nand-ecc-opt = "bch8";
 		gpmc,device-nand = "true";
@@ -263,20 +271,17 @@
 		gpmc,access-ns = <30>;
 		gpmc,rd-cycle-ns = <30>;
 		gpmc,wr-cycle-ns = <30>;
-		gpmc,wait-pin = <1>;
-		gpmc,wait-on-read = "true";
-		gpmc,wait-on-write = "true";
 		gpmc,bus-turnaround-ns = <0>;
 		gpmc,cycle2cycle-delay-ns = <50>;
 		gpmc,cycle2cycle-diffcsen;
 		gpmc,clk-activation-ns = <0>;
-		gpmc,wait-monitoring-ns = <0>;
-		gpmc,wr-access-ns = <0>;
+		gpmc,wr-access-ns = <30>;
 		gpmc,wr-data-mux-bus-ns = <0>;
+
+		ti,elm_id = <&elm>;
 
 		#address-cells = <1>;
 		#size-cells = <1>;
-		elm_id = <&elm>;
 
 		partition@0 {
 			label = "xload";
