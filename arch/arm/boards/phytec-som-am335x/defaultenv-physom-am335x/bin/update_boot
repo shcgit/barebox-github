@@ -1,0 +1,9 @@
+#!/bin/sh
+
+#mmc0.probe=1
+#mount /dev/mmc0.0 fat /mnt
+#unprotect /dev/nand0.boot
+#erase /dev/nand0.boot
+#cp /mnt/barebox.imximg /dev/nand0.boot
+#protect /dev/nand0.boot
+#umount /mnt

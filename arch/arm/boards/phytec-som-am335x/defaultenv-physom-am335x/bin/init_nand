@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if [ -e /dev/nand0.system.ubi ]; then
+	ubidetach /dev/nand0.system
+fi
+
+ubiformat /dev/nand0.system -y
+ubiattach /dev/nand0.system
+ubimkvol -t static /dev/nand0.system.ubi kernel 3407872
+ubimkvol -t dynamic /dev/nand0.system.ubi root 29360128
+ubimkvol -t dynamic /dev/nand0.system.ubi bbox 0

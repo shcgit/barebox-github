@@ -1,0 +1,6 @@
+#!/bin/sh
+
+mmc0.probe=1
+mount /dev/mmc0.0 fat /mnt
+ubiupdatevol /dev/nand0.system.ubi.root /mnt/sysroot.img
+umount /mnt
