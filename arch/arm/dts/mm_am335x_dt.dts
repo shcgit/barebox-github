@@ -34,8 +34,12 @@
 	gpioexp: gpio@19 {
 		compatible = "nxp,pca9672";
 		reg = <0x19>;
+		interrupt-parent = <&gpio3>;
+		interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
 		gpio-controller;
 		#gpio-cells = <2>;
+		interrupt-controller;
+		#interrupt-cells = <2>;
 	};
 
 	wm8753: wm8753@1b {
@@ -139,6 +143,26 @@
 };
 
 &am33xx_pinmux {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_hog>;
+
+	pinctrl_hog: hoggrp {
+		pinctrl-single,pins = <
+			/* FIXME: USB_OTG_SELFPOWERED */
+			0x078 (PIN_OUTPUT | MUX_MODE7)		/* gpio1_28 */
+			/* FIXME: TPS65910 IRQ */
+			0x1a4 (PIN_INPUT_PULLUP | MUX_MODE7)	/* gpio3_19 */
+			/* FIXME: PCA9672 IRQ */
+			0x1e8 (PIN_INPUT_PULLUP | MUX_MODE7)	/* gpio3_8 */
+			/* X_GPIO0 */
+			0x060 (PIN_INPUT | MUX_MODE7)		/* gpio1_24 */
+			/* X_GPIO5 */
+			0x05c (PIN_INPUT | MUX_MODE7)		/* gpio1_23 */
+			/* X_GPIO6 */
+			0x1e4 (PIN_INPUT | MUX_MODE7)		/* gpio3_7 */
+		>;
+	};
+
 	dcan1_pins: pinmux_dcan1_pins {
 		pinctrl-single,pins = <
 			0x168 (PIN_OUTPUT | MUX_MODE2)		/* dcan1_tx_mux0 */
@@ -175,7 +199,6 @@
 			0x0e0 (PIN_OUTPUT | MUX_MODE0)		/* lcd_vsync */
 			0x0e4 (PIN_OUTPUT | MUX_MODE0)		/* lcd_hsync */
 			0x0e8 (PIN_OUTPUT | MUX_MODE0)		/* lcd_pclk */
-/* FIXME */
 			0x0ec (PIN_OUTPUT | MUX_MODE0)		/* lcd_ac_bias_en */
 		>;
 	};
